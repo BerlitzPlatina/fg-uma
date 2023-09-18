@@ -1,10 +1,9 @@
 package cache_service
 
 import (
+	"gachapi/pkg/e"
 	"strconv"
 	"strings"
-
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
 )
 
 type Article struct {

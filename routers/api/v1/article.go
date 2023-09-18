@@ -1,20 +1,21 @@
 package v1
 
 import (
+	"gachapi/pkg/e"
+	"gachapi/pkg/qrcode"
+	"gachapi/service/article_service"
+	"log"
 	"net/http"
+
+	"gachapi/pkg/app"
+	"gachapi/pkg/setting"
+	"gachapi/pkg/util"
+	"gachapi/service/tag_service"
 
 	"github.com/astaxie/beego/validation"
 	"github.com/boombuler/barcode/qr"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
-
-	"github.com/EDDYCJY/go-gin-example/pkg/app"
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
-	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
-	"github.com/EDDYCJY/go-gin-example/pkg/util"
-	"github.com/EDDYCJY/go-gin-example/service/article_service"
-	"github.com/EDDYCJY/go-gin-example/service/tag_service"
 )
 
 // @Summary Get a single article
@@ -64,9 +65,10 @@ func GetArticle(c *gin.Context) {
 // @Failure 500 {object} app.Response
 // @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
+	log.Printf("===============================")
+
 	appG := app.Gin{C: c}
 	valid := validation.Validation{}
-
 	state := -1
 	if arg := c.PostForm("state"); arg != "" {
 		state = com.StrTo(arg).MustInt()

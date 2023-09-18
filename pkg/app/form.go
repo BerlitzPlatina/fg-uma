@@ -1,11 +1,11 @@
 package app
 
 import (
-	"github.com/astaxie/beego/validation"
-	"github.com/gin-gonic/gin"
+	"gachapi/pkg/e"
 	"net/http"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
+	"github.com/astaxie/beego/validation"
+	"github.com/gin-gonic/gin"
 )
 
 // BindAndValid binds and validates data

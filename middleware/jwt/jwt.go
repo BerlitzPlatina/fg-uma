@@ -1,23 +1,28 @@
 package jwt
 
 import (
+	"gachapi/pkg/e"
+	"gachapi/pkg/util"
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
-	"github.com/EDDYCJY/go-gin-example/pkg/util"
 )
 
 // JWT is jwt middleware
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		log.Println("'abc'")
+
 		var code int
 		var data interface{}
 
 		code = e.SUCCESS
-		token := c.Query("token")
+		auth := c.GetHeader("Authorization")
+		token := strings.TrimPrefix(auth, "Bearer ")
+
 		if token == "" {
 			code = e.INVALID_PARAMS
 		} else {
@@ -34,7 +39,7 @@ func JWT() gin.HandlerFunc {
 
 		if code != e.SUCCESS {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"code": code,
+				"code": http.StatusUnauthorized,
 				"msg":  e.GetMsg(code),
 				"data": data,
 			})

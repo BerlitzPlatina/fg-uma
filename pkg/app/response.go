@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/gin-gonic/gin"
+	"gachapi/pkg/e"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/e"
+	"github.com/gin-gonic/gin"
 )
 
 type Gin struct {

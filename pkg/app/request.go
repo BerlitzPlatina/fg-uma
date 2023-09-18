@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/astaxie/beego/validation"
+	"gachapi/pkg/logging"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/logging"
+	"github.com/astaxie/beego/validation"
 )
 
 // MarkErrors logs error logs

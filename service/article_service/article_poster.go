@@ -1,6 +1,9 @@
 package article_service
 
 import (
+	"gachapi/pkg/file"
+	"gachapi/pkg/qrcode"
+	"gachapi/pkg/setting"
 	"image"
 	"image/draw"
 	"image/jpeg"
@@ -8,10 +11,6 @@ import (
 	"os"
 
 	"github.com/golang/freetype"
-
-	"github.com/EDDYCJY/go-gin-example/pkg/file"
-	"github.com/EDDYCJY/go-gin-example/pkg/qrcode"
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 )
 
 type ArticlePoster struct {
