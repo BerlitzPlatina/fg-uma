@@ -3,7 +3,10 @@ package gacha
 import (
 	"gachapi/pkg/app"
 	"gachapi/pkg/e"
+	"gachapi/pkg/setting"
+	"gachapi/pkg/util"
 	"gachapi/service/article_service"
+	"log"
 	"net/http"
 
 	"github.com/astaxie/beego/validation"
@@ -11,19 +14,27 @@ import (
 	"github.com/unknwon/com"
 )
 
-func getCurrentGacha(c *gin.Context) {
-	data := map[string]interface{}{
-		"lang": "GO语言",
-		"tag":  "<br>",
-	}
-	c.AsciiJSON(http.StatusOK, data)
+func GetCurrentGacha(c *gin.Context) {
+	appG := app.Gin{C: c}
+	appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
 }
 
-func GetArticle(c *gin.Context) {
+func GetArticles(c *gin.Context) {
+	log.Printf("===============================")
+
 	appG := app.Gin{C: c}
-	id := com.StrTo(c.Param("id")).MustInt()
 	valid := validation.Validation{}
-	valid.Min(id, 1, "id")
+	state := -1
+	if arg := c.PostForm("state"); arg != "" {
+		state = com.StrTo(arg).MustInt()
+		valid.Range(state, 0, 1, "state")
+	}
+
+	tagId := -1
+	if arg := c.PostForm("tag_id"); arg != "" {
+		tagId = com.StrTo(arg).MustInt()
+		valid.Min(tagId, 1, "tag_id")
+	}
 
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
@@ -31,22 +42,28 @@ func GetArticle(c *gin.Context) {
 		return
 	}
 
-	articleService := article_service.Article{ID: id}
-	exists, err := articleService.ExistByID()
-	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
-		return
+	articleService := article_service.Article{
+		TagID:    tagId,
+		State:    state,
+		PageNum:  util.GetPage(c),
+		PageSize: setting.AppSetting.PageSize,
 	}
-	if !exists {
-		appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_ARTICLE, nil)
+
+	total, err := articleService.Count()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_COUNT_ARTICLE_FAIL, nil)
 		return
 	}
 
-	article, err := articleService.Get()
+	articles, err := articleService.GetAll()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_GET_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_GET_ARTICLES_FAIL, nil)
 		return
 	}
 
-	appG.Response(http.StatusOK, e.SUCCESS, article)
+	data := make(map[string]interface{})
+	data["lists"] = articles
+	data["total"] = total
+
+	appG.Response(http.StatusOK, e.SUCCESS, data)
 }

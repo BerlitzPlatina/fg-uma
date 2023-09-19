@@ -7,6 +7,7 @@ import (
 	"gachapi/pkg/upload"
 	"gachapi/routers/api"
 	v1 "gachapi/routers/api/v1"
+	gacha "gachapi/routers/api/v1/uma"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -61,7 +62,7 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/articles/poster/generate", v1.GenerateArticlePoster)
 
 		// get uma gacha
-		apiv1.GET("/uma/gacha", v1.GetArticles)
+		apiv1.GET("/uma/gacha", gacha.GetCurrentGacha)
 	}
 
 	return r
