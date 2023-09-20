@@ -21,6 +21,9 @@ import (
 // InitRouter initialize routing information
 func InitRouter() *gin.Engine {
 	r := gin.New()
+	// set url static, for css, js file
+	r.Static("/static", "./static/")
+
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
